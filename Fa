@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+#include <locale.h>
+#define maxdl 9
+
+
+
+struct abc
+{
+	char id[maxdl];
+	struct abc *sled;
+};
+
+
+void vkl(struct abc **p, char t_id[])
+{
+	struct abc *pt, *k, *j;
+	pt = (abc *)malloc(sizeof(abc));
+	strcpy_s(pt -> id, t_id);
+	if (*p == NULL || strcmp(pt->id, (*p)->id) < 0)
+	{
+		pt->sled = *p;
+		*p = pt;
+	}
+	else
+	{
+		k = *p;
+		while (k != NULL && strcmp(pt->id, k->id) > 0)
+		{
+			j = k;
+			k = k->sled;
+		}
+		j -> sled = pt; pt -> sled = k;
+
+	}
+}
+
+int Print(abc *p)
+{
+	while (p)
+	{
+		printf("%s", p -> id);
+		p = p->sled;
+		printf("\n");
+	}
+	return 0;
+}
+
+void zamenaK(abc* p, int k, char slovo[])
+{
+	int counter = 0;
+	while (counter < k && p)
+	{
+		p = p->sled;
+		counter++;
+	}
+	strcpy_s(p->id, slovo);
+}
+
+void zamenaPredPosled(abc *p, int n, char slovo[])
+{
+	int counter = 0;
+	while (counter < n - 1 && p)
+	{
+		p = p->sled;
+		counter++;
+	}
+	strcpy_s(p->id, slovo);
+}
+
+void zamenaPosled(abc *p, int n, char slovo[])
+{
+	int counter = 0;
+	while (counter < n&&p)
+	{
+		p = p->sled;
+		counter++;
+	}
+	strcpy_s(p->id, slovo);
+}
+
+int main()
+{
+	setlocale(LC_ALL, "");
+	struct abc *p;
+	int n, i;
+	char t_id[maxdl];
+	printf("\nVvedite kol-vo identifikatorov\n n=");
+	scanf_s("%d", &n);
+	p = NULL;
+	printf("Identifikatory: ");
+	for (i = 0; i <= n; i++)
+	{
+		gets_s(t_id);
+		vkl(&p, t_id);
+	}
+	Print(p);
+	int oper, k;
+	char slovo[maxdl];
+	while (1)
+	{
+		puts("\nZamenit identifikator\n 1) Po nomeru;\n 2) Predposledniy;\n 3) Posledniy\n");
+		oper = _getch();
+
+		switch (oper)
+		{
+		case '1':
+			printf("Zamena po nomeru\n\n");
+			printf("Vvedi nomer identifikatora:\n\n");
+			scanf_s("%d", &k, sizeof k);
+			printf("Zamenit na ");
+			scanf_s("%s", &slovo, sizeof slovo);
+
+			zamenaK(p, k, slovo);
+			Print(p);
+
+			break;
+
+		case '2':
+			printf("\n\n");
+			printf("Zamena predposlednego identifikatora\n\n");
+			printf("Zamenit na ");
+			scanf_s("%s", &slovo, sizeof slovo);
+			zamenaPredPosled(p, n, slovo);
+			Print(p);
+
+			break;
+
+		case '3':
+			printf("Zamena poslednego identifikatora\n\n");
+			printf("Zamenit na ");
+			scanf_s("%s", slovo, sizeof slovo);
+
+			zamenaPosled(p, n, slovo);
+			Print(p);
+
+			break;
+
+		}
+	}
+	system("pause");
+	return 0;
+
+}
